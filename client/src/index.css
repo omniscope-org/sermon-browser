@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.canvasjs-navigator-panel {
+  left: 0 !important;
+  top: 0 !important;
+}

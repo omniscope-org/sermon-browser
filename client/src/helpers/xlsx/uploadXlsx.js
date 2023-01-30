@@ -24,7 +24,6 @@ function uploadXlsx (e, setData) {
                 }
 
                 setData(prev => [...prev, newObj])
-                console.log(newObj)
             }
         }
 

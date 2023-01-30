@@ -5,39 +5,37 @@ import CanvasJSReact from '../canvasjs/canvasjs.stock.react'
 const CanvasJS = CanvasJSReact.CanvasJS
 const CanvasJSStockChart = CanvasJSReact.CanvasJSStockChart
 
-const RangeSlider = () => {
+const RangeSlider = ({filteredData, setMapData}) => {
+
     const [state, setState] = useState({
-       dataPoints1: [], 
-       dataPoints2: [], 
-       dataPoints3: [], 
-       isLoaded: false 
+      dataPoints: [],
+      minDate: 0,
+      maxDate: 0
     })
 
-    useEffect(() => {
-        const startDate = new Date('2015-01-01')
-        const endDate = new Date('2023-01-01')
+    const filter = (e) => {
+      const filtered = filteredData.filter(d => new Date(d.date).getTime() > e.minimum && new Date(d.date).getTime() < e.maximum)
+      setMapData(filtered)
+    }
 
-        const dps = [
-            {
-                x: startDate,
-                y: 1
-            },
-            {
-                x: endDate,
-                y: 1
-            }
-        ]
+    useEffect(() => {
+        const dps = []
+        for (let d of filteredData) dps.push({ x: new Date(d.date), y: 1})
+
+        const unixArr = dps.map(d => d.x.getTime())
+        const minDate = Math.min(...unixArr)
+        const maxDate = Math.max(...unixArr)
+
         setState({
-            isLoaded: true,
-            dataPoints: dps
+            dataPoints: dps,
+            minDate,
+            maxDate
         })
-    }, [])
+    }, [filteredData])
 
     const options = {
       theme: "light2",
-      rangeChanged: function(e) { 
-        console.log(e.minimum, e.maximum)
-      },
+      rangeChanged: filter,
       rangeSelector: { enabled: false },
       charts: [],
       navigator: {
@@ -45,8 +43,8 @@ const RangeSlider = () => {
           dataPoints: state.dataPoints
         }],
         slider: {
-            minimum: new Date("2015-01-01"),
-            maximum: new Date("2023-01-01")
+            minimum: state.minDate,
+            maximum: state.maxDate
         },
         height: 100
       },
@@ -60,7 +58,7 @@ const RangeSlider = () => {
 
     return (
         <div style = {{width: '45%'}}>
-          {state.isLoaded && <CanvasJSStockChart containerProps={containerProps} options = {options} />}
+          <CanvasJSStockChart containerProps={containerProps} options = {options} />
         </div>
     )
 }

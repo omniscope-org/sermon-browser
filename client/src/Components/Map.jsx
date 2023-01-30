@@ -8,8 +8,8 @@ function ChangeView({ center, zoom }) {
     return null
 }
 
-const Map = ({data, handleSelect}) => {
-    const markers = data.map(d => <Marker 
+const Map = ({mapData, handleSelect}) => {
+    const markers = mapData.map(d => <Marker 
         key = {uuidv4()} position = {[d.x, d.y]} eventHandlers = {{ click: () => handleSelect(d)}}
     >
         <Popup>
@@ -17,7 +17,7 @@ const Map = ({data, handleSelect}) => {
         </Popup>
     </Marker>)
 
-    const center = data.length ? [data[0].x, data[0].y] : [51.505, -0.09]
+    const center = mapData.length ? [mapData[0].x, mapData[0].y] : [51.505, -0.09]
 
     return <>
         <MapContainer center={center} zoom={13} scrollWheelZoom={true}

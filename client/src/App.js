@@ -10,14 +10,17 @@ import Filters from './Components/Filters'
 function App () {
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
-  const [mapData, setMapData] = useState([])
 
   const [selected, setSelected] = useState({})
   const handleSelect = (item) => setSelected(item)
   
+  const [dateFilter, setDateFilter] = useState({
+    minimum: 0,
+    maximum: 0
+  })
+
   useEffect(() => {
     setFilteredData(data)
-    setMapData(data)
   }, [data])
 
   return <div style = {{width: '100vw', height: '100vh'}}>
@@ -32,14 +35,14 @@ function App () {
     <div style = {{width: '100%', minHeight: window.innerHeight / 2,
       display: 'flex', justifyContent: 'space-around', marginTop: 10
     }}>
-      <Map mapData = {mapData} handleSelect = {handleSelect} />
+      <Map handleSelect = {handleSelect} dateFilter = {dateFilter} filteredData = {filteredData} />
       <Video videoId = {selected.youtubeId} timecode = {selected.timecode} />
     </div>
 
     <div style = {{width: '100%', height: 100, 
       display: 'flex', justifyContent: 'space-around', marginTop: 10
     }}>
-      <RangeSlider filteredData = {filteredData} setMapData = {setMapData} />
+      <RangeSlider filteredData = {filteredData} setDateFilter = {setDateFilter} />
       <Filters data = {data} setFilteredData = {setFilteredData} />
     </div>
   </div>

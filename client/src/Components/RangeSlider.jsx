@@ -5,7 +5,7 @@ import CanvasJSReact from '../canvasjs/canvasjs.stock.react'
 const CanvasJS = CanvasJSReact.CanvasJS
 const CanvasJSStockChart = CanvasJSReact.CanvasJSStockChart
 
-const RangeSlider = ({filteredData, setMapData}) => {
+const RangeSlider = ({filteredData, setDateFilter}) => {
 
     const [state, setState] = useState({
       dataPoints: [],
@@ -13,10 +13,7 @@ const RangeSlider = ({filteredData, setMapData}) => {
       maxDate: 0
     })
 
-    const filter = (e) => {
-      const filtered = filteredData.filter(d => new Date(d.date).getTime() > e.minimum && new Date(d.date).getTime() < e.maximum)
-      setMapData(filtered)
-    }
+    const filter = (e) => setDateFilter({ minimum: e.minimum, maximum: e.maximum })
 
     useEffect(() => {
         const dps = []

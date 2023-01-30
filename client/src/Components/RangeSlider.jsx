@@ -5,7 +5,7 @@ import CanvasJSReact from '../canvasjs/canvasjs.stock.react'
 const CanvasJS = CanvasJSReact.CanvasJS
 const CanvasJSStockChart = CanvasJSReact.CanvasJSStockChart
 
-const RangeSlider = ({filteredData, setDateFilter}) => {
+const RangeSlider = ({data, changeFilter}) => {
 
     const [state, setState] = useState({
       dataPoints: [],
@@ -13,22 +13,27 @@ const RangeSlider = ({filteredData, setDateFilter}) => {
       maxDate: 0
     })
 
-    const filter = (e) => setDateFilter({ minimum: e.minimum, maximum: e.maximum })
+    const filter = (e) => {
+      changeFilter('minimum', e.minimum)
+      changeFilter('maximum', e.maximum)
+    }
 
     useEffect(() => {
         const dps = []
-        for (let d of filteredData) dps.push({ x: new Date(d.date), y: 1})
 
-        const unixArr = dps.map(d => d.x.getTime())
+        for (let d of data) dps.push({ x: new Date(d.date), y: 1})
+
+        const unixArr = data.map(d => new Date(d.date).getTime())
         const minDate = Math.min(...unixArr)
         const maxDate = Math.max(...unixArr)
 
         setState({
-            dataPoints: dps,
-            minDate,
-            maxDate
+          dataPoints: dps,
+          minDate,
+          maxDate
         })
-    }, [filteredData])
+
+    }, [data])
 
     const options = {
       theme: "light2",
@@ -40,8 +45,8 @@ const RangeSlider = ({filteredData, setDateFilter}) => {
           dataPoints: state.dataPoints
         }],
         slider: {
-            minimum: state.minDate,
-            maximum: state.maxDate
+            minimum: new Date('2007-07-01').getTime(),
+            maximum: new Date('2009-08-01').getTime()
         },
         height: 100
       },

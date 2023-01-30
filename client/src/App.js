@@ -13,14 +13,56 @@ function App () {
 
   const [selected, setSelected] = useState({})
   const handleSelect = (item) => setSelected(item)
-  
-  const [dateFilter, setDateFilter] = useState({
-    minimum: 0,
+
+  const [filter, setFilter] = useState({
+    rc: false,
+    ucc: false,
+    pcusa: false,
+    sbc: false,
+    minimum: 0, 
     maximum: 0
   })
 
+  const changeFilter = (filterName, value) => setFilter(prev => ({...prev, [filterName]: value}))
+
   useEffect(() => {
-    setFilteredData(data)
+    let filtered1 = []
+    let filtered2 = []
+
+    const {minimum, maximum, ...boolFilters} = filter
+
+    const isNoFilter = Object.values(boolFilters).every(f => !f)
+
+    if (isNoFilter) {
+      filtered1 = data
+    } else {
+      filtered1 = data.filter(d => {
+        for (let key in boolFilters) if (boolFilters[key] && d.filter === key) return true
+        return false
+      })
+    }
+    
+    if (!minimum && !maximum) {
+      filtered2 = filtered1
+    } else {
+      filtered2 = filtered1.filter(d => {
+        return new Date(d.date).getTime() > minimum && new Date(d.date).getTime() < maximum
+      })
+    }
+    
+    setFilteredData(filtered2)
+  }, [filter])
+
+  useEffect(() => {
+    const unix1 = new Date('2022-07-01').getTime()
+    const unix2 = new Date('2022-08-01').getTime()
+
+    const filtered = data.filter(d => {
+      return new Date(d.date).getTime() > unix1 && new Date(d.date).getTime() < unix2
+    })  
+    console.log(filtered)
+
+    setFilteredData(filtered)
   }, [data])
 
   return <div style = {{width: '100vw', height: '100vh'}}>
@@ -35,15 +77,15 @@ function App () {
     <div style = {{width: '100%', minHeight: window.innerHeight / 2,
       display: 'flex', justifyContent: 'space-around', marginTop: 10
     }}>
-      <Map handleSelect = {handleSelect} dateFilter = {dateFilter} filteredData = {filteredData} />
+      <Map handleSelect = {handleSelect} filteredData = {filteredData} />
       <Video videoId = {selected.youtubeId} timecode = {selected.timecode} />
     </div>
 
     <div style = {{width: '100%', height: 100, 
       display: 'flex', justifyContent: 'space-around', marginTop: 10
     }}>
-      <RangeSlider filteredData = {filteredData} setDateFilter = {setDateFilter} />
-      <Filters data = {data} setFilteredData = {setFilteredData} />
+      <RangeSlider data = {data} changeFilter = {changeFilter} />
+      <Filters filter = {filter} changeFilter = {changeFilter} />
     </div>
   </div>
 }

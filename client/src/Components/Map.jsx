@@ -1,7 +1,11 @@
-import React from 'react'
+import React, {memo} from 'react'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import {v4 as uuidv4} from 'uuid'
 import * as L from "leaflet"
+
+function propsAreEqual (prev, next) {
+    return prev.filteredData === next.filteredData
+}
 
 function ChangeView({ center }) {
     const map = useMap()
@@ -42,4 +46,4 @@ const Map = ({handleSelect, filteredData}) => {
     </>
 }
 
-export default Map
+export default memo(Map, propsAreEqual)

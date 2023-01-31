@@ -6,6 +6,8 @@ import { IconButton, Tooltip } from '@mui/material'
 import UploadIcon from '@mui/icons-material/Upload'
 import RangeSlider from './Components/RangeSlider'
 import Filters from './Components/Filters'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 
 function App () {
   const [data, setData] = useState([])
@@ -13,6 +15,8 @@ function App () {
 
   const [selected, setSelected] = useState({})
   const handleSelect = (item) => setSelected(item)
+
+  const [loading, setLoading] = useState(false)
 
   const [filter, setFilter] = useState({
     rc: false,
@@ -53,6 +57,7 @@ function App () {
     setFilteredData(filtered2)
   }, [filter])
 
+  // Set init filtered data
   useEffect(() => {
     const unix1 = new Date('2014-07-01').getTime()
     const unix2 = new Date('2015-01-01').getTime()
@@ -64,9 +69,27 @@ function App () {
     setFilteredData(filtered)
   }, [data])
 
-  return <div style = {{width: '100vw', height: '100vh'}}>
+  // Upload xlsx
+  const upload = async (e) => {
+    setLoading(true)
 
-    <input type="file" id="uploadXlsx" style = {{display: 'none'}} onChange = {(e) => uploadXlsx(e, setData)} />
+    const data = await uploadXlsx(e)
+    if (data) setData(data)
+
+    setLoading(false)
+  }
+
+  return <div style = {{width: '100vw', height: '100vh'}}>
+    {loading && <>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color = "inherit" disableShrink />
+      </Backdrop>
+    </>}
+
+    <input type="file" id="uploadXlsx" style = {{display: 'none'}} onChange = {upload} />
     <Tooltip title = 'Upload XLSX'>
       <IconButton onClick = {() => {document.getElementById('uploadXlsx').click()}} color = 'primary' style = {{left: '2.5%'}}>
         <UploadIcon />

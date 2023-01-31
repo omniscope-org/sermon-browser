@@ -54,13 +54,12 @@ function App () {
   }, [filter])
 
   useEffect(() => {
-    const unix1 = new Date('2022-07-01').getTime()
-    const unix2 = new Date('2022-08-01').getTime()
+    const unix1 = new Date('2014-07-01').getTime()
+    const unix2 = new Date('2015-01-01').getTime()
 
     const filtered = data.filter(d => {
       return new Date(d.date).getTime() > unix1 && new Date(d.date).getTime() < unix2
     })  
-    console.log(filtered)
 
     setFilteredData(filtered)
   }, [data])

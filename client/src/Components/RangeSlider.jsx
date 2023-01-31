@@ -45,8 +45,12 @@ const RangeSlider = ({data, changeFilter}) => {
           dataPoints: state.dataPoints
         }],
         slider: {
-            minimum: new Date('2007-07-01').getTime(),
-            maximum: new Date('2009-08-01').getTime()
+            minimum: new Date('2014-07-01'),
+            maximum: new Date('2015-01-01')
+        },
+        axisX: {
+          minimum: new Date('2013-01-01'),
+          maximum: new Date('2023-01-01')
         },
         height: 100
       },

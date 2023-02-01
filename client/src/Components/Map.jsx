@@ -9,7 +9,7 @@ function propsAreEqual (prev, next) {
 
 function ChangeView({ center }) {
     const map = useMap()
-    map.setView(center)
+    //map.setView(center)
     return null
 }
 

@@ -23,8 +23,8 @@ function App () {
     ucc: false,
     pcusa: false,
     sbc: false,
-    minimum: 0, 
-    maximum: 0
+    minimum: new Date('2014-07-01').getTime(),
+    maximum: new Date('2015-01-01').getTime()
   })
 
   const changeFilter = (filterName, value) => setFilter(prev => ({...prev, [filterName]: value}))
@@ -59,11 +59,8 @@ function App () {
 
   // Set init filtered data
   useEffect(() => {
-    const unix1 = new Date('2014-07-01').getTime()
-    const unix2 = new Date('2015-01-01').getTime()
-
     const filtered = data.filter(d => {
-      return new Date(d.date).getTime() > unix1 && new Date(d.date).getTime() < unix2
+      return new Date(d.date).getTime() > filter.minimum && new Date(d.date).getTime() < filter.maximum
     })  
 
     setFilteredData(filtered)
